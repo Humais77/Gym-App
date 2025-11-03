@@ -4,4 +4,4 @@ const errorHandler = (statusCode,message)=>{
     error.message = message;
     return error;
 }
-module.exports = errorHandler;
+module.exports = {errorHandler};
