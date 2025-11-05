@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const connentDB = require('./config/db.js');
 const authRoute = require('./routes/auth.route.js');
 const app = express();
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const PORT = 3000;
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(cors({
 
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/user',authRoute);
 

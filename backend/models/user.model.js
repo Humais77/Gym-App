@@ -13,12 +13,9 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true,
+        select:false,
     },
-    confirmPassword:{
-        type:String,
-        required:true,
-        
-    }
+    
 
 },{timestamps:true});
 const User = mongoose.model('User',userSchema);
