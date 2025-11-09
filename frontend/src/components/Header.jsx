@@ -3,9 +3,9 @@ import Navbar from './Navbar'
 
 const Header = () => {
   return (
-    <div className="">
+    <header className='border-b border-gray-400'>
       <Navbar/>
-    </div>
+    </header>
   )
 }
 
