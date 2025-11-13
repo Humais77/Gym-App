@@ -2,11 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const userFromStorage = localStorage.getItem("userInfo") ?JSON.parse(localStorage.getItem("userInfo")):null;
-const initialGueseId = localStorage.getItem("guestId")|| `guest_${new Date().getTime()}`;
-localStorage.setItem("guestId",initialGueseId);
+const initialGuestId = localStorage.getItem("guestId")|| `guest_${new Date().getTime()}`;
+localStorage.setItem("guestId",initialGuestId);
 const initialState = {
     user:userFromStorage,
-    guestId:initialGueseId,
+    guestId:initialGuestId,
     loading:false,
     error:null,
 }
@@ -47,6 +47,9 @@ const authSlice = createSlice({
             state.guestId = `guest_${new Date().getTime()}`;
             localStorage.setItem("guestId", state.guestId);
         },
+        clearError:(state)=>{
+            state.error = null;
+        }
     },
     extraReducers:(builder)=>{
          builder
@@ -57,10 +60,12 @@ const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload;
+                state.guestId = null;
+                localStorage.removeItem("guestId");
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload.message;
+                state.error = action.payload?.message || "Login failed";
             })
             .addCase(registerUser.pending, (state) => {
                 state.loading = true;
@@ -69,13 +74,15 @@ const authSlice = createSlice({
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload;
+                state.guestId = null;
+                localStorage.removeItem("guestId");
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload.message;
+               state.error = action.payload?.message || "Registration failed";
             });
     },
 })
 
-export const {logout,generateNewGuestId} = authSlice.actions;
+export const {logout,generateNewGuestId,clearError} = authSlice.actions;
 export default authSlice.reducer;

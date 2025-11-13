@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/user/authSlice';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setMenuOpen(false);
+    navigate('/sign-in');
+  };
 
   return (
-    <nav className="bg-gray-900 text-white shadow-md  w-full top-0 z-50">
+    <nav className="bg-gray-900 text-white shadow-md w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <div className="text-2xl font-bold text-indigo-400 tracking-wide">
@@ -30,14 +41,24 @@ const Navbar = () => {
           >
             About Us
           </NavLink>
-          <NavLink
-            to="/sign-in"
-            className={({ isActive }) =>
-              `transition hover:text-indigo-400 ${isActive ? 'text-indigo-400' : ''}`
-            }
-          >
-            Sign In
-          </NavLink>
+
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="transition hover:text-indigo-400"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <NavLink
+              to="/sign-in"
+              className={({ isActive }) =>
+                `transition hover:text-indigo-400 ${isActive ? 'text-indigo-400' : ''}`
+              }
+            >
+              Sign In
+            </NavLink>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -86,13 +107,23 @@ const Navbar = () => {
           >
             About Us
           </NavLink>
-          <NavLink
-            to="/sign-in"
-            onClick={() => setMenuOpen(false)}
-            className="block hover:text-indigo-400"
-          >
-            Sign In
-          </NavLink>
+
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="block text-left w-full hover:text-indigo-400"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <NavLink
+              to="/sign-in"
+              onClick={() => setMenuOpen(false)}
+              className="block hover:text-indigo-400"
+            >
+              Sign In
+            </NavLink>
+          )}
         </div>
       )}
     </nav>
