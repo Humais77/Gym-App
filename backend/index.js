@@ -1,35 +1,41 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const connentDB = require('./config/db.js');
+const connectDB = require('./config/db.js');
 const authRoute = require('./routes/auth.route.js');
-const app = express();
+const adminRoute = require('./routes/admin/admin.route.js');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const PORT = 3000;
+
+const app = express();
 dotenv.config();
-connentDB();
+connectDB();
 
 app.use(cors({
   origin: process.env.CLIENT_URL || "http://localhost:5173",
   credentials: true
 }));
 
-
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/users',authRoute);
+// Public auth routes
+app.use('/api/users', authRoute);
 
+// Admin routes
+app.use("/api/admin/users", adminRoute);
 
-app.use((err,req,res,next)=>{
+// Global error handler
+app.use((err, req, res, next) => {
     const statusCode = err.status || 500;
     const message = err.message || "Something went wrong";
     res.status(statusCode).json({
-        success:false,
+        success: false,
         statusCode,
         message
-    })
-})
-app.listen(PORT,()=>{
-    console.log('Server is running on PORT:',PORT);
-})
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log('Server is running on PORT:', PORT);
+});

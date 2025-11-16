@@ -50,6 +50,7 @@ const register = async (req, res, next) => {
                 _id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
+                role:newUser.role,
             },
             token, 
         });
@@ -85,7 +86,8 @@ const login = async (req, res, next) => {
             user: {
                 _id: user._id,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                role:user.role,
             },
             token
         });
