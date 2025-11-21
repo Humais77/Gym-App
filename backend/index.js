@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db.js');
 const authRoute = require('./routes/auth.route.js');
 const adminRoute = require('./routes/admin/admin.route.js');
+const memberRoute = require("./routes/admin/member.route.js");
+const planRoute = require("./routes/admin/plan.route.js");
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -24,7 +26,10 @@ app.use('/api/users', authRoute);
 // Admin routes
 app.use("/api/admin/users", adminRoute);
 
-// Global error handler
+// Admin Member Management routes 
+app.use("/api/admin/members",memberRoute);
+app.use("/api/admin/plans",planRoute);
+
 app.use((err, req, res, next) => {
     const statusCode = err.status || 500;
     const message = err.message || "Something went wrong";
